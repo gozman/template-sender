@@ -16,55 +16,61 @@ module.exports.smoochWebhookListener = (event, context, callback) => {
   });
 
   const response = {
-    statusCode: 200,
+      "statusCode": 200,
+      "headers": {},
+      "body": "{ 'ok': true }"
   };
+  console.log(payload);
 
   //Validate the trigger message
   if(payload && payload.trigger == "message:appMaker" && payload.messages && payload.messages[0].text == TRIGGER_STRING) {
     //Send the response
-    smooch.appUsers.sendMessage(payload.app._id, payload.appUser._id, {
+    console.log("Triggered");
+
+    smooch.appUsers.sendMessage(payload.appUser._id, {
         role: 'appMaker',
         type: 'carousel',
         items: [{
             title: 'Tacos',
             description: 'These are tacos',
-            mediaUrl: 'http://example.org/image.jpg',
+            mediaUrl: 'https://deltaco.com/images/promos2017/promo8/queso-taco.png',
             actions: [{
-                text: 'Select',
+                text: 'Tacos',
                 type: 'postback',
                 payload: 'TACOS'
             }, {
                 text: 'More info',
                 type: 'link',
-                uri: 'http://example.org'
+                uri: 'http://smooch.io'
             }]
         }, {
             title: 'Burritos',
             description: 'Burritos are usually better than tacos',
-            mediaUrl: 'http://example.org/image.jpg',
+            mediaUrl: 'https://www.deltaco.com/files/menu/item/machocomboburrito.png',
             actions: [{
-                text: 'Select',
+                text: 'Burritos',
                 type: 'postback',
                 payload: 'BURRITOS'
             }, {
                 text: 'More info',
                 type: 'link',
-                uri: 'http://example.org'
+                uri: 'http://zendesk.com'
             }]
         }]
     }).then(() => {
-        callback(null, response);
+        context.succeed(response);
     });
   } else if(payload && payload.trigger == "postback") {
-    smooch.appUsers.sendMessage(payload.app._id, payload.appUser._id, {
-        text: payload.postbacks[0].action.payload
+    smooch.appUsers.sendMessage(payload.appUser._id, {
+        text: payload.postbacks[0].action.text,
         role: 'appUser',
-        type: 'text'
+        type: 'text',
+        metadata: {payload: payload.postbacks[0].action.payload}
     }).then(() => {
-        // async code
+        context.succeed(response);
     });
   } else {
-    callback(null, response);
+    context.succeed(response);
   }
 
 
