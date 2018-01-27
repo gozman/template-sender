@@ -1,0 +1,14 @@
+{
+  "name": "template-sender",
+  "version": "1.0.0",
+  "description": "Serverless function for triggering a structured message to be sent on a Smooch channel",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mike Gozzo <mike@smooch.io>",
+  "license": "MIT",
+  "dependencies": {
+    "smooch-core": "^5.7.0"
+  }
+}
